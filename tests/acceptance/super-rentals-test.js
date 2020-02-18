@@ -19,49 +19,67 @@ module('Acceptance | super rentals', function(hooks) {
     assert.equal(currentURL(), '/about');
   });
 
-    test('visiting /about', async function(assert) {
-      await visit('/about');
+  test('viewing the details of a rental property', async function(assert) {
+    await visit('/');
+    assert.dom('.rental').exists({ count: 3 });
 
-      assert.equal(currentURL(), '/about');
-      assert.dom('nav').exists();
-      assert.dom('h1').hasText('SuperRentals');
-      assert.dom('h2').hasText('About Super Rentals');
+    await click('.rental:first-of-type a');
+    assert.equal(currentURL(), '/rentals/grand-old-mansion');
+  });
 
-      assert.dom('.jumbo a.button').hasText('Contact Us');
-      await click('.jumbo a.button');
+  test('visiting /rentals/grand-old-mansion', async function(assert) {
+    await visit('/rentals/grand-old-mansion');
 
-      assert.equal(currentURL(), '/getting-in-touch');
-    });
+    assert.equal(currentURL(), '/rentals/grand-old-mansion');
+    assert.dom('nav').exists();
+    assert.dom('h1').containsText('SuperRentals');
+    assert.dom('h2').containsText('Grand Old Mansion');
+    assert.dom('.rental.detailed').exists();
+  });
 
-    test('visiting /getting-in-touch', async function(assert) {
-      await visit('/getting-in-touch');
+  test('visiting /about', async function(assert) {
+    await visit('/about');
 
-      assert.equal(currentURL(), '/getting-in-touch');
-      assert.dom('nav').exists();
-      assert.dom('h1').hasText('SuperRentals');
-      assert.dom('h2').hasText('Contact Us');
+    assert.equal(currentURL(), '/about');
+    assert.dom('nav').exists();
+    assert.dom('h1').hasText('SuperRentals');
+    assert.dom('h2').hasText('About Super Rentals');
 
-      assert.dom('a.button').hasText('About');
-      await click('.jumbo a.button');
+    assert.dom('.jumbo a.button').hasText('Contact Us');
+    await click('.jumbo a.button');
 
-      assert.equal(currentURL(), '/about');
-    });
+    assert.equal(currentURL(), '/getting-in-touch');
+  });
 
-    test('navigating using the nav-bar', async function(assert) {
-      await visit('/');
+  test('visiting /getting-in-touch', async function(assert) {
+    await visit('/getting-in-touch');
 
-      assert.dom('nav').exists();
-      assert.dom('nav a.menu-index').hasText('SuperRentals')
-      assert.dom('nav a.menu-about').hasText('About');
-      assert.dom('nav a.menu-contact').hasText('Contact');
+    assert.equal(currentURL(), '/getting-in-touch');
+    assert.dom('nav').exists();
+    assert.dom('h1').hasText('SuperRentals');
+    assert.dom('h2').hasText('Contact Us');
 
-      await click('nav a.menu-about');
-      assert.equal(currentURL(), '/about');
+    assert.dom('a.button').hasText('About');
+    await click('.jumbo a.button');
 
-      await click('nav a.menu-contact');
-      assert.equal(currentURL(), '/getting-in-touch');
+    assert.equal(currentURL(), '/about');
+  });
 
-      await click('nav a.menu-index');
-      assert.equal(currentURL(), '/');
-    });
+  test('navigating using the nav-bar', async function(assert) {
+    await visit('/');
+
+    assert.dom('nav').exists();
+    assert.dom('nav a.menu-index').hasText('SuperRentals')
+    assert.dom('nav a.menu-about').hasText('About');
+    assert.dom('nav a.menu-contact').hasText('Contact');
+
+    await click('nav a.menu-about');
+    assert.equal(currentURL(), '/about');
+
+    await click('nav a.menu-contact');
+    assert.equal(currentURL(), '/getting-in-touch');
+
+    await click('nav a.menu-index');
+    assert.equal(currentURL(), '/');
+  });
 });
